@@ -6,17 +6,19 @@ import com.Udemy.CursoKotlin.controller.requests.PutBookRequest
 import com.Udemy.CursoKotlin.controller.requests.PutCustomerRequest
 import com.Udemy.CursoKotlin.controller.response.BookResponse
 import com.Udemy.CursoKotlin.controller.response.CustomerResponse
+import com.Udemy.CursoKotlin.controller.response.PageResponse
 import com.Udemy.CursoKotlin.enum.BookStatus
 import com.Udemy.CursoKotlin.enum.CustomerStatus
 import com.Udemy.CursoKotlin.model.BookModel
 import com.Udemy.CursoKotlin.model.CustomerModel
+import org.springframework.data.domain.Page
 
 fun PostCustomerRequest.toCustomerModel(): CustomerModel {
-    return CustomerModel(name = this.name, email = this.email, status = CustomerStatus.ATIVO)
+    return CustomerModel(name = this.name, email = this.email, status = CustomerStatus.ATIVO, password = this.password)
 }
 
 fun PutCustomerRequest.toCustomerModel(previousValue: CustomerModel): CustomerModel {
-    return CustomerModel(id= previousValue.id ,name = this.name, email = this.email, status = previousValue.status)
+    return CustomerModel(id= previousValue.id ,name = this.name, email = this.email, status = previousValue.status, password = previousValue.password)
 }
 
 fun PostBookRequest.toBookModel(customer: CustomerModel): BookModel {
@@ -55,4 +57,8 @@ fun BookModel.toResponse(): BookResponse {
         customer = this.customer,
         status = this.status
     )
+}
+
+fun <T> Page<T>.toPageResponse(): PageResponse<T> {
+    return PageResponse(this.content, this.number, this.totalElements, this.totalPages)
 }

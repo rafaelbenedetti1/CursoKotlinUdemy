@@ -3,7 +3,9 @@ package com.Udemy.CursoKotlin.controller
 import com.Udemy.CursoKotlin.controller.requests.PostBookRequest
 import com.Udemy.CursoKotlin.controller.requests.PutBookRequest
 import com.Udemy.CursoKotlin.controller.response.BookResponse
+import com.Udemy.CursoKotlin.controller.response.PageResponse
 import com.Udemy.CursoKotlin.extension.toBookModel
+import com.Udemy.CursoKotlin.extension.toPageResponse
 import com.Udemy.CursoKotlin.extension.toResponse
 import com.Udemy.CursoKotlin.service.BookService
 import com.Udemy.CursoKotlin.service.CustomerService
@@ -14,8 +16,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("book")
-class BookController (val customerService: CustomerService, val bookService: BookService){
+@RequestMapping("books")
+class BookController (private val customerService: CustomerService, private val bookService: BookService){
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -25,8 +27,8 @@ class BookController (val customerService: CustomerService, val bookService: Boo
     }
 
     @GetMapping
-    fun findAll(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse> {
-        return bookService.findAll(pageable).map { it.toResponse() }
+    fun findAll(@PageableDefault(page = 0, size = 10) pageable: Pageable): PageResponse<BookResponse> {
+        return bookService.findAll(pageable).map { it.toResponse() }.toPageResponse()
     }
 
     @GetMapping("active")

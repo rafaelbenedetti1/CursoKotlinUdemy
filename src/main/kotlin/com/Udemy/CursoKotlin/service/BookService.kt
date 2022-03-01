@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class BookService(val bookRepository: BookRepository) {
+class BookService(private val bookRepository: BookRepository) {
     fun create(book: BookModel) {
     bookRepository.save(book)
     }
@@ -44,5 +44,9 @@ class BookService(val bookRepository: BookRepository) {
             book.status = BookStatus.DELETADO
         }
         bookRepository.saveAll(books)
+    }
+
+    fun findAllByIds(bookIds: Set<Int>): List<BookModel> {
+       return bookRepository.findAllById(bookIds).toList()
     }
 }
